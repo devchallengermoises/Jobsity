@@ -11,7 +11,7 @@ and a Script will do the following:
 * It will copy the .env.sample file into .env file
 * It will generate all docker containers for the app
 * It will install all dependencies
-* It will run the migrations
+* It will run the migrations && seeds
 
 
 # API Documentation
