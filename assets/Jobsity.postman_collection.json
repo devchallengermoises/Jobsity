@@ -1,0 +1,201 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Jobsity",
+		"_postman_id": "e7396268-8f1f-73a6-7a2b-7b346434f8d5",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "History",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"url\", 'localhost:8080');",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/history",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"description": ""
+					},
+					{
+						"key": "",
+						"value": "",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Stock get",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"url\", 'localhost:8080');",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{url}}/stock?q=googl.us",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"stock"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "googl.us",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "User register",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"url\", 'localhost:8080');",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/users",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "",
+						"value": "",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"test1@test.com\",\n    \"password\": \"12345678\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "User login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"if (jsonData && jsonData.result ) {",
+							"    postman.setEnvironmentVariable(\"token\", jsonData.result.data);",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"url\", 'localhost:8080');",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{url}}/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"unit@test.com\",\n    \"password\": \"12345678\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "bye",
+			"request": {
+				"url": "{{url}}/bye/My Name",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "hello",
+			"request": {
+				"url": "{{url}}/hello/My Name",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

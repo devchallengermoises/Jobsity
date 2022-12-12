@@ -33,3 +33,5 @@ Endpoint     | Parameters                       | Description
 --- |----------------------------------| ---
 `GET /stock`   | `q` *query string* required<br>  | represents the market to query<br> i.e ?q=aapl.us
 `GET /history` | *N/A*                            | retrieve the history of queries made to the API service by that user
+
+`note: inside of assets you can find a postman collection with all endpoints already set`
