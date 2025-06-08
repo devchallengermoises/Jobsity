@@ -1,201 +1,148 @@
 {
 	"variables": [],
 	"info": {
-		"name": "Jobsity",
+		"name": "Jobsity Stock API",
 		"_postman_id": "e7396268-8f1f-73a6-7a2b-7b346434f8d5",
-		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"description": "A collection for testing the Jobsity Stock API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "History",
-			"event": [
+			"name": "Authentication",
+			"item": [
 				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"postman.setEnvironmentVariable(\"url\", 'localhost:8080');",
-							""
-						]
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["users"]
+						},
+						"description": "Register a new user"
 					}
-				}
-			],
-			"request": {
-				"url": "{{url}}/history",
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{token}}",
-						"description": ""
-					},
-					{
-						"key": "",
-						"value": "",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "Stock get",
-			"event": [
+				},
 				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"postman.setEnvironmentVariable(\"url\", 'localhost:8080');",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"url": {
-					"raw": "{{url}}/stock?q=googl.us",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"stock"
-					],
-					"query": [
+					"name": "Login",
+					"event": [
 						{
-							"key": "q",
-							"value": "googl.us",
-							"equals": true,
-							"description": ""
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData && jsonData.result && jsonData.result.success) {",
+									"    pm.environment.set(\"token\", jsonData.result.data);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
 						}
 					],
-					"variable": []
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{token}}",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "User register",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"postman.setEnvironmentVariable(\"url\", 'localhost:8080');",
-							""
-						]
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": ["{{base_url}}"],
+							"path": ["login"]
+						},
+						"description": "Login and get JWT token"
 					}
 				}
-			],
-			"request": {
-				"url": "{{url}}/users",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					},
-					{
-						"key": "",
-						"value": "",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\":\"test1@test.com\",\n    \"password\": \"12345678\"\n}"
-				},
-				"description": ""
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "User login",
-			"event": [
+			"name": "Stock",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"var jsonData = JSON.parse(responseBody);",
-							"",
-							"if (jsonData && jsonData.result ) {",
-							"    postman.setEnvironmentVariable(\"token\", jsonData.result.data);",
-							"}"
-						]
+					"name": "Query Stock",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/stock?q=aapl.us",
+							"host": ["{{base_url}}"],
+							"path": ["stock"],
+							"query": [
+								{
+									"key": "q",
+									"value": "aapl.us"
+								}
+							]
+						},
+						"description": "Query stock information (triggers email notification)"
 					}
 				},
 				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"postman.setEnvironmentVariable(\"url\", 'localhost:8080');",
-							""
-						]
+					"name": "Get History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/history",
+							"host": ["{{base_url}}"],
+							"path": ["history"]
+						},
+						"description": "Get user's stock query history"
 					}
 				}
-			],
-			"request": {
-				"url": "{{url}}/login",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\":\"unit@test.com\",\n    \"password\": \"12345678\"\n}"
-				},
-				"description": ""
-			},
-			"response": []
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		},
 		{
-			"name": "bye",
-			"request": {
-				"url": "{{url}}/bye/My Name",
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{token}}",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
 		{
-			"name": "hello",
-			"request": {
-				"url": "{{url}}/hello/My Name",
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"description": ""
-			},
-			"response": []
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
 		}
 	]
 }
