@@ -12,8 +12,8 @@ return function (App $app) {
     $secret = $_ENV["JWT_SECRET"];
 
     $app->add(new JwtAuthentication([
-        "path" => ["/bye", "/stock", "/history"],
-        "ignore" => ["/users", "/login", "/hello"],
+        "path" => ["/stock", "/history"],
+        "ignore" => ["/user", "/login"],
         'secret' => $secret,
         "error" => function ($response) {
             return $response->withStatus(401);

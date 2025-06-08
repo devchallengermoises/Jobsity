@@ -39,10 +39,9 @@ class StockHistoryController
 
         if (!array_key_exists('q', $data)) {
             $response->getBody()->write(json_encode([
-                'result' => [
-                    'success' => false,
-                    "data" => 'invalid stock code'
-                ]
+                'status' => 'error',
+                'message' => 'Invalid stock code',
+                'data' => null
             ]));
             return $response
                 ->withHeader('Content-Type', 'application/json')
@@ -59,10 +58,9 @@ class StockHistoryController
 
         if (!isset($json->symbols[0]->volume)) {
             $response->getBody()->write(json_encode([
-                'result' => [
-                    'success' => false,
-                    "data" => 'Market does not exists'
-                ]
+                'status' => 'error',
+                'message' => 'Market does not exist',
+                'data' => null
             ]));
             return $response
                 ->withHeader('Content-Type', 'application/json')
@@ -73,16 +71,19 @@ class StockHistoryController
             $this->addHistory($json->symbols[0]);
         } catch (\Exception $e) {
             throw  new Exception($e->getMessage());
-
         }
 
         unset($json->symbols[0]->volume);
         unset($json->symbols[0]->user_id);
-        $body = (string)(json_encode($json->symbols[0]));
+        $stockData = $json->symbols[0];
 
-        $this->producer->produce($user['email'], $body);
+        $this->producer->produce($user['email'], json_encode($stockData));
 
-        $response->getBody()->write($body);
+        $response->getBody()->write(json_encode([
+            'status' => 'success',
+            'message' => 'Stock information retrieved successfully',
+            'data' => $stockData
+        ]));
 
         return $response
             ->withHeader('Content-Type', 'application/json')
@@ -114,25 +115,32 @@ class StockHistoryController
     {
         $userData = $this->authUser->getUserDataFromToken($request->getHeaders()['Authorization']);
 
-        // todo pagination
+        $params = $request->getQueryParams();
+        $page = isset($params['page']) && (int)$params['page'] > 0 ? (int)$params['page'] : 1;
+        $perPage = isset($params['per_page']) && (int)$params['per_page'] > 0 ? (int)$params['per_page'] : 10;
+        $offset = ($page - 1) * $perPage;
 
-        $users = $this->repository->findBy('user_id', $userData['user_id'])
-            ?->orderBy('date', 'DESC')
-            ->get()
-            ->toJson();
+        $query = $this->repository->findBy('user_id', $userData['user_id'])
+            ?->orderBy('date', 'DESC');
+
+        $total = $query->count();
+        $items = $query->skip($offset)->take($perPage)->get()->toArray();
 
         $response->getBody()->write(json_encode([
-            'result' => [
-                'success' => true,
-                "data" => json_decode($users ?? '', true)
+            'status' => 'success',
+            'message' => 'History retrieved successfully',
+            'data' => [
+                'items' => $items,
+                'total' => $total,
+                'page' => $page,
+                'per_page' => $perPage,
+                'total_pages' => ceil($total / $perPage)
             ]
         ]));
-
 
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);
-
     }
 
 }

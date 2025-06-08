@@ -8,6 +8,7 @@ use App\Domain\Queue\Service\Consumer;
 use DI\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Mailer\MailerInterface;
 
 class ConsumeQueueCommand
 {
@@ -30,9 +31,9 @@ class ConsumeQueueCommand
 
         // Get dependencies
         $logger = $container->get(LoggerInterface::class);
-        $mailService = $container->get('Swift_Mailer');
         $amqpChannel = $container->get('PhpAmqpLib\Channel\AMQPChannel');
-        $mailServiceInstance = new \App\Domain\Mail\Service\MailService($mailService);
+        $mailer = $container->get(MailerInterface::class);
+        $mailServiceInstance = new \App\Domain\Mail\Service\MailService($mailer, 'john@doe.com');
         $consumer = new Consumer($amqpChannel, $mailServiceInstance, $logger);
 
         $logger->info('Starting queue consumer...');

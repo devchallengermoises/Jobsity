@@ -22,12 +22,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"12345678\"\n}"
+							"raw": "{\n    \"email\": \"unit@test.com\",\n    \"password\": \"12345678\"\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/users",
+							"raw": "{{base_url}}/user",
 							"host": ["{{base_url}}"],
-							"path": ["users"]
+							"path": ["user"]
 						},
 						"description": "Register a new user"
 					}
@@ -141,7 +141,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:8080",
+			"value": "http://localhost",
 			"type": "string"
 		}
 	]
