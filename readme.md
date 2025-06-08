@@ -111,7 +111,7 @@ See `.env.sample` for all required variables. Key variables:
 ### Authentication
 | Endpoint         | Method | Body                                    | Description                |
 |------------------|--------|-----------------------------------------|----------------------------|
-| `/users`         | POST   | `{ "email": string, "password": string }` | Register a new user        |
+| `/user`         | POST   | `{ "email": string, "password": string }` | Register a new user        |
 | `/login`         | POST   | `{ "email": string, "password": string }` | Obtain JWT access token    |
 
 ### Stock & History (Require JWT)
@@ -120,13 +120,25 @@ Add header: `Authorization: Bearer <token>`
 | Endpoint         | Method | Query Params         | Description                                 |
 |------------------|--------|---------------------|---------------------------------------------|
 | `/stock`         | GET    | `q` (e.g. aapl.us)  | Query stock info, triggers email notification|
-| `/history`       | GET    |                     | Get your stock query history                |
+| `/history`       | GET    | `page`, `per_page`  | Get your stock query history (paginated)     |
 
-### Utility
-| Endpoint         | Method | Description         |
-|------------------|--------|---------------------|
-| `/hello/{name}`  | GET    | Test endpoint       |
-| `/bye/{name}`    | GET    | Test endpoint (JWT) |
+#### Example: Paginated History Response
+```json
+{
+  "status": "success",
+  "message": "History retrieved successfully",
+  "data": {
+    "items": [
+      { "symbol": "AAPL.US", "name": "APPLE", ... },
+      { "symbol": "TSLA.US", "name": "TESLA", ... }
+    ],
+    "total": 42,
+    "page": 1,
+    "per_page": 10,
+    "total_pages": 5
+  }
+}
+```
 
 ### HTTP Status Codes
 - `200`: Success
